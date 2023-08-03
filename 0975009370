@@ -441,6 +441,7 @@ if game.PlaceId == 6284583030 then
         HumanoidRootPart.CFrame = position
     end
 
+    _G.ChangingServer = false
     function ConnectServerPublic()
         local jobId = game.JobId
         local Servers = game.HttpService:JSONDecode(game:HttpGet(
@@ -458,13 +459,16 @@ if game.PlaceId == 6284583030 then
             return a.ping < b.ping
         end)
 
-        local cooldownChangeSv = 30
-	for i, v in pairs(cooldownChangeSv) do
-		print("Cooldown change Server:", i)
-		wait(1)
-	end
-	
-        game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, sortServers[1].id)
+        if _G.ChangingServer == false then
+            task.spawn(function ()
+                for i = 1, 30 do
+                    print("Cooldown change server:", i)
+                    wat(1)
+                end
+                game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, sortServers[1].id)
+            end)
+        end
+        
     end
 
     --Request Auto Re-join When Kicked / Disconnected / Error Message 

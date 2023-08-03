@@ -448,7 +448,7 @@ if game.PlaceId == 6284583030 then
             _G.ChangingServer = true        
                 task.spawn(function ()
                     
-                    for i = 30, 0, -1 do
+                    for i = 120, 0, -1 do
                         print("Cooldown change server:", i)
                         wait(1)
                     end

@@ -4,6 +4,7 @@ if not game:IsLoaded() then AutoExecuted = true end
 repeat task.wait() until game.PlaceId ~= nil
 if not game:IsLoaded() then game.Loaded:Wait() end
 
+print("Version:", 10)
 --//-------------- SERVICES ----------------//*
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
@@ -444,35 +445,32 @@ if game.PlaceId == 6284583030 then
     _G.ChangingServer = false
     function ConnectServerPublic()
         if _G.ChangingServer == false then
-            _G.ChangingServer = true
-
-            local jobId = game.JobId
-            local Servers = game.HttpService:JSONDecode(game:HttpGet(
-            "https://games.roblox.com/v1/games/6284583030/servers/Public?sortOrder=Asc&limit=100"))
-
-            local sortServers = {}
-
-            for i, v in pairs(Servers.data) do
-                if v.ping < 80 and v.playing < 3 then
-                    table.insert(sortServers, v)
-                end
-            end
-
-            table.sort(sortServers, function(a, b)
-                return a.ping < b.ping
-            end)
-
-            
+            _G.ChangingServer = true        
                 task.spawn(function ()
+                    
                     for i = 30, 0, -1 do
                         print("Cooldown change server:", i)
                         wait(1)
                     end
+                    local Servers = game.HttpService:JSONDecode(game:HttpGet(
+                    "https://games.roblox.com/v1/games/6284583030/servers/Public?sortOrder=Asc&limit=100"))
+        
+                    local sortServers = {}
+        
+                    for i, v in pairs(Servers.data) do
+                        if v.ping < 80 and v.playing < 3 then
+                            table.insert(sortServers, v)
+                        end
+                    end
+        
+                    table.sort(sortServers, function(a, b)
+                        return a.ping < b.ping
+                    end)
+
                     game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, sortServers[1].id)
                     _G.ChangingServer = false
                 end)
-        end
-        
+        end     
     end
 
     --Request Auto Re-join When Kicked / Disconnected / Error Message 

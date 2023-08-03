@@ -461,9 +461,9 @@ if game.PlaceId == 6284583030 then
 
         if _G.ChangingServer == false then
             task.spawn(function ()
-                for i = 1, 30 do
+                for i = 30, 0, -1 do
                     print("Cooldown change server:", i)
-                    wat(1)
+                    wait(1)
                 end
                 game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, sortServers[1].id)
             end)

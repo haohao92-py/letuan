@@ -4,7 +4,6 @@ if not game:IsLoaded() then AutoExecuted = true end
 repeat task.wait() until game.PlaceId ~= nil
 if not game:IsLoaded() then game.Loaded:Wait() end
 
-print("Version:", 10)
 --//-------------- SERVICES ----------------//*
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
@@ -448,7 +447,7 @@ if game.PlaceId == 6284583030 then
             _G.ChangingServer = true        
                 task.spawn(function ()
                     
-                    for i = 120, 0, -1 do
+                    for i = 30, 0, -1 do
                         print("Cooldown change server:", i)
                         wait(1)
                     end
@@ -479,7 +478,7 @@ if game.PlaceId == 6284583030 then
     end)
 
     function  CheckCountPlayersInServer()
-        if #game.Players:GetChildren() >= 5 then
+        if #game.Players:GetChildren() >= 13 then
             ConnectServerPublic()
         end
     end

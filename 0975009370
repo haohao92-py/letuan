@@ -473,9 +473,9 @@ if game.PlaceId == 6284583030 then
     end
 
     --Request Auto Re-join When Kicked / Disconnected / Error Message 
-    game:GetService("GuiService").ErrorMessageChanged:Connect(function()
-        ConnectServerPublic()
-    end)
+    --game:GetService("GuiService").ErrorMessageChanged:Connect(function()
+        --ConnectServerPublic()
+    --end)
 
     function  CheckCountPlayersInServer()
         if #game.Players:GetChildren() >= 13 then
@@ -485,6 +485,7 @@ if game.PlaceId == 6284583030 then
 
     _G.IsLoop = false
     _G.SendAllPet = false
+
     --teleportto("Axolotl Deep Ocean")
     --task.wait(5)
     --MoveTo(spawnAxolotlDeepOcean)

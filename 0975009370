@@ -443,30 +443,34 @@ if game.PlaceId == 6284583030 then
 
     _G.ChangingServer = false
     function ConnectServerPublic()
-        local jobId = game.JobId
-        local Servers = game.HttpService:JSONDecode(game:HttpGet(
-        "https://games.roblox.com/v1/games/6284583030/servers/Public?sortOrder=Asc&limit=100"))
-
-        local sortServers = {}
-
-        for i, v in pairs(Servers.data) do
-            if v.ping < 80 and v.playing < 3 then
-                table.insert(sortServers, v)
-            end
-        end
-
-        table.sort(sortServers, function(a, b)
-            return a.ping < b.ping
-        end)
-
         if _G.ChangingServer == false then
-            task.spawn(function ()
-                for i = 30, 0, -1 do
-                    print("Cooldown change server:", i)
-                    wait(1)
+            _G.ChangingServer = true
+
+            local jobId = game.JobId
+            local Servers = game.HttpService:JSONDecode(game:HttpGet(
+            "https://games.roblox.com/v1/games/6284583030/servers/Public?sortOrder=Asc&limit=100"))
+
+            local sortServers = {}
+
+            for i, v in pairs(Servers.data) do
+                if v.ping < 80 and v.playing < 3 then
+                    table.insert(sortServers, v)
                 end
-                game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, sortServers[1].id)
+            end
+
+            table.sort(sortServers, function(a, b)
+                return a.ping < b.ping
             end)
+
+            
+                task.spawn(function ()
+                    for i = 30, 0, -1 do
+                        print("Cooldown change server:", i)
+                        wait(1)
+                    end
+                    game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, sortServers[1].id)
+                    _G.ChangingServer = false
+                end)
         end
         
     end

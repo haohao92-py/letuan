@@ -444,7 +444,7 @@ if game.PlaceId == 6284583030 then
     function ConnectServerPublic()
         local jobId = game.JobId
         local Servers = game.HttpService:JSONDecode(game:HttpGet(
-        "https://games.roblox.com/v1/games/6284583030/servers/Public?sortOrder=Asc&limit=10"))
+        "https://games.roblox.com/v1/games/6284583030/servers/Public?sortOrder=Asc&limit=100"))
 
         local sortServers = {}
 
@@ -466,8 +466,8 @@ if game.PlaceId == 6284583030 then
         ConnectServerPublic()
     end)
 
-    function CheckCountPlayers(length)
-        if #game.Players:GetChildren() >= length then
+    function  CheckCountPlayersInServer()
+        if #game.Players:GetChildren() >= 5 then
             ConnectServerPublic()
         end
     end
@@ -482,13 +482,13 @@ if game.PlaceId == 6284583030 then
     task.spawn(function()
         while true do
             if _G.IsLoop then
-                print("RedeemFreeGift")
+                --print("RedeemFreeGift")
                 for i = 1, 12 do
                     Library.Network.Invoke("Redeem Free Gift", i)
                     wait(2)
                 end
 
-                print("Use Boost Inventory")
+                --print("Use Boost Inventory")
                 local Save = Library.Save.Get()
                 local BoostsInventory = Save.BoostsInventory
                 for i, v in pairs(BoostsInventory) do
@@ -503,17 +503,15 @@ if game.PlaceId == 6284583030 then
         end
     end)
 
-    local maxDiamond = false
     task.spawn(function ()  
-        while false do
+        while true do
             local spawnAxolotlDeepOcean = CFrame.new(4143.873046875, 9.539969444274902, 3792.5546875)
             local spawnDiamondMine = CFrame.new(9049.576171875, -14.661337852479027, 2401.019775390625)
 
             --Fram Fruits
             local timeOutFarmFruits = 3*60
             while timeOutFarmFruits > 0 do
-                CheckCountPlayers(5)
-
+                CheckCountPlayersInServer()
                 if Library.WorldCmds.Get() ~= "Axolotl Ocean" then
                     Library.WorldCmds.Load("Axolotl Ocean")
                     wait(5)
@@ -531,25 +529,20 @@ if game.PlaceId == 6284583030 then
             _G.IsLoop = false;
 
 
-            if maxDiamond == false then
-                 --Farm Diamonds
+            --Farm Diamonds
             local timeOutFarmDiamondMine = 10*60
             while timeOutFarmDiamondMine > 0 do
-                
-                CheckCountPlayers(5)
-
+                CheckCountPlayersInServer()
                 if Library.WorldCmds.Get() ~= "Diamond Mine" then
                     Library.WorldCmds.Load("Diamond Mine")
                     wait(5)
 
                     if Library.WorldCmds.Get() == "Spawn" then
-                        maxDiamond = true
                         break;
                     end
 
                 else
                     if timeOutFarmDiamondMine > 0 then
-
                         MoveTo(spawnDiamondMine)
                         _G.IsLoop = true
                         _G.SendAllPet = false
@@ -559,7 +552,6 @@ if game.PlaceId == 6284583030 then
                         wait(1)
                     end
                 end
-            end
             end
             _G.IsLoop = false;
         end

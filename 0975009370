@@ -458,6 +458,7 @@ if game.PlaceId == 6284583030 then
             return a.ping < b.ping
         end)
 
+        wait(60)
         game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, sortServers[1].id)
     end
 
@@ -472,7 +473,7 @@ if game.PlaceId == 6284583030 then
         end
     end
 
-    _G.IsLoop = true
+    _G.IsLoop = false
     _G.SendAllPet = false
     --teleportto("Axolotl Deep Ocean")
     --task.wait(5)

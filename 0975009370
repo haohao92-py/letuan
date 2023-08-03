@@ -458,7 +458,12 @@ if game.PlaceId == 6284583030 then
             return a.ping < b.ping
         end)
 
-        wait(60)
+        local cooldownChangeSv = 30
+	for i, v in pairs(cooldownChangeSv) do
+		print("Cooldown change Server:", i)
+		wait(1)
+	end
+	
         game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, sortServers[1].id)
     end
 

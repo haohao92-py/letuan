@@ -4,6 +4,9 @@ if not game:IsLoaded() then AutoExecuted = true end
 repeat task.wait() until game.PlaceId ~= nil
 if not game:IsLoaded() then game.Loaded:Wait() end
 
+getgenv().boostFPS = true
+setfpscap(15)
+
 --//-------------- SERVICES ----------------//*
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
@@ -483,6 +486,12 @@ if game.PlaceId == 6284583030 then
         end
     end
 
+    local VIM = game:GetService("VirtualInputManager")
+    function AutoSpace()
+        VIM:SendKeyEvent(true, "Space", 0, game)
+        VIM:SendKeyEvent(false, "Space", 0, game)
+    end
+
     _G.IsLoop = false
     _G.SendAllPet = false
 
@@ -530,6 +539,7 @@ if game.PlaceId == 6284583030 then
                 end
 
                 MoveTo(spawnAxolotlDeepOcean)
+                AutoSpace()
 
                 _G.IsLoop = true
                 _G.SendAllPet = true
@@ -556,6 +566,7 @@ if game.PlaceId == 6284583030 then
                 else
                     if timeOutFarmDiamondMine > 0 then
                         MoveTo(spawnDiamondMine)
+                        AutoSpace()
                         _G.IsLoop = true
                         _G.SendAllPet = false
 

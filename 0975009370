@@ -467,7 +467,7 @@ if game.PlaceId == 6284583030 then
     end)
 
     function CheckCountPlayers(length)
-        if #game.Players:Getchildren() >= length then
+        if #game.Players:GetChildren() >= length then
             ConnectServerPublic()
         end
     end

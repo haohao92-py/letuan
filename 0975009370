@@ -541,7 +541,7 @@ if game.PlaceId == 6284583030 then
             local spawnDiamondMine = CFrame.new(9049.576171875, -14.661337852479027, 2401.019775390625)
 
             --Fram Fruits
-            local timeOutFarmFruits = 3*60
+            local timeOutFarmFruits = 100
             while timeOutFarmFruits > 0 do
                 CheckCountPlayersInServer()
                 if Library.WorldCmds.Get() ~= "Axolotl Ocean" then
@@ -563,7 +563,7 @@ if game.PlaceId == 6284583030 then
 
 
             --Farm Diamonds
-            local timeOutFarmDiamondMine = 10*60
+            local timeOutFarmDiamondMine = 600
             while timeOutFarmDiamondMine > 0 do
                 CheckCountPlayersInServer()
                 if Library.WorldCmds.Get() ~= "Diamond Mine" then

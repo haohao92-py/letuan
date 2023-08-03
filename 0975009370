@@ -472,7 +472,7 @@ if game.PlaceId == 6284583030 then
         end
     end
 
-    _G.IsLoop = false
+    _G.IsLoop = true
     _G.SendAllPet = false
     --teleportto("Axolotl Deep Ocean")
     --task.wait(5)

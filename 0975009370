@@ -320,6 +320,7 @@ if game.PlaceId == 6284583030 then
 			Library.Network.Fire("Collect Lootbag", child.Name, HumanoidRootPart.Position + Vector3.new(math.random(-0.05, 0.05), math.random(-0.05, 0.05), math.random(-0.05, 0.05)))
 		end
 	end)
+    warn("CollectLootbags has Loaded")
 
     local FarmUtilities_CurrentOrbs = {}
     --Hàm thu thập Orbs
@@ -333,7 +334,6 @@ if game.PlaceId == 6284583030 then
                 FarmUtilities_CurrentOrbs = {}
             end
         end
-        
     end)
 
     Library.Things:FindFirstChild("Orbs").ChildAdded:Connect(function(child) 
@@ -342,6 +342,7 @@ if game.PlaceId == 6284583030 then
 			table.insert(FarmUtilities_CurrentOrbs, child.name)
 		end
 	end)
+    warn("CollectOrb has Loaded")
 
     local WorldCoins = Library.Things:WaitForChild("Coins")
 
@@ -354,6 +355,7 @@ if game.PlaceId == 6284583030 then
             coin:SetAttribute("InstantLand", true)
         end
     end)
+    warn("InstantLand Fall Coin has Loaded")
 
     task.spawn(function()
         while true do
@@ -486,13 +488,20 @@ if game.PlaceId == 6284583030 then
         end
     end
 
-    local VirtualInputManager = game:GetService("VirtualInputManager")
 
+
+    local VirtualInputManager = game:GetService("VirtualInputManager")
     function AutoSpace()
         VirtualInputManager:SendKeyEvent(true, "Space", 0, game)   
         wait() 
         VirtualInputManager:SendKeyEvent(false, "Space", 0, game)      
     end
+
+    game:GetService("Players").LocalPlayer.Idled:Connect(function()
+        AutoSpace()
+    end)
+
+    warn("Anti-Afk has Loaded")
 
     _G.IsLoop = false
     _G.SendAllPet = false

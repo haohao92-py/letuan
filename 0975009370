@@ -486,10 +486,12 @@ if game.PlaceId == 6284583030 then
         end
     end
 
-    local VIM = game:GetService("VirtualInputManager")
+    local VirtualInputManager = game:GetService("VirtualInputManager")
+
     function AutoSpace()
-        VIM:SendKeyEvent(true, "Space", 0, game)
-        VIM:SendKeyEvent(false, "Space", 0, game)
+        VirtualInputManager:SendKeyEvent(true, "Space", 0, game)   
+        wait() 
+        VirtualInputManager:SendKeyEvent(false, "Space", 0, game)      
     end
 
     _G.IsLoop = false

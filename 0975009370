@@ -549,8 +549,9 @@ if game.PlaceId == 6284583030 then
                     wait(5)
                 end
 
-                MoveTo(spawnAxolotlDeepOcean)
-                AutoSpace()
+                if HumanoidRootPart.CFrame ~= spawnAxolotlDeepOcean then
+                    MoveTo(spawnAxolotlDeepOcean)
+                end
 
                 _G.IsLoop = true
                 _G.SendAllPet = true
@@ -565,7 +566,9 @@ if game.PlaceId == 6284583030 then
             --Farm Diamonds
             local timeOutFarmDiamondMine = 600
             while timeOutFarmDiamondMine > 0 do
+
                 CheckCountPlayersInServer()
+                
                 if Library.WorldCmds.Get() ~= "Diamond Mine" then
                     Library.WorldCmds.Load("Diamond Mine")
                     wait(5)
@@ -576,8 +579,10 @@ if game.PlaceId == 6284583030 then
 
                 else
                     if timeOutFarmDiamondMine > 0 then
-                        MoveTo(spawnDiamondMine)
-                        AutoSpace()
+
+                        if HumanoidRootPart ~= spawnAxolotlDeepOcean then
+                            MoveTo(spawnDiamondMine)
+                        end
                         _G.IsLoop = true
                         _G.SendAllPet = false
 

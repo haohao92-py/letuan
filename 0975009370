@@ -558,7 +558,7 @@ if game.PlaceId == 6284583030 then
                         wait(3)
                     end
 
-                    MoveTo(spawnAxolotlDeepOcean)
+                    HumanoidRootPart.CFrame = spawnAxolotlDeepOcean
                     Camera.CFrame = cameraAxolotl
 
                     _G.IsLoop = true
@@ -578,7 +578,7 @@ if game.PlaceId == 6284583030 then
 
                     if Library.WorldCmds.Get() ~= "Diamond Mine" then
                         Library.WorldCmds.Load("Diamond Mine")
-                        MoveTo(spawnDiamondMine)
+                        HumanoidRootPart = spawnDiamondMine
                         Camera.CFrame = cameraDiamon
                         wait(3)
 

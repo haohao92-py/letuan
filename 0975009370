@@ -4,7 +4,6 @@ if not game:IsLoaded() then AutoExecuted = true end
 repeat task.wait() until game.PlaceId ~= nil
 if not game:IsLoaded() then game.Loaded:Wait() end
 
-setfpscap(15)
 --//-------------- getgenv ----------------//*
 getgenv().boostFPS = true
 getgenv().isRun = true
@@ -32,7 +31,7 @@ local Webhook_URL = ""
 local Webhook_Daycare = true
 local Webhook_Huge = true
 --//-------------- [version] ----------------//*
-print("Version:", 112)
+print("Version:", 115)
 
 LocalPlayer.CharacterAdded:Connect(function(char)
     Character = char
@@ -49,25 +48,25 @@ if game.PlaceId == 6284583030 then
                 "Error while bypassing the anti-cheat! (Didn't find blunder)")
         end
 
-        local OldGet = Blunder.getAndClear
-        setreadonly(Blunder, false)
-        local function OutputData(Message)
-            print("-- PET SIM X BLUNDER --")
-            print(Message .. "\n")
-        end
+        -- local OldGet = Blunder.getAndClear
+        -- setreadonly(Blunder, false)
+        -- local function OutputData(Message)
+        --     print("-- PET SIM X BLUNDER --")
+        --     print(Message .. "\n")
+        -- end
 
-        Blunder.getAndClear = function(...)
-            local Packet = ...
-            for i, v in next, Packet.list do
-                if v.message ~= "PING" then
-                    OutputData(v.message)
-                    table.remove(Packet.list, i)
-                end
-            end
-            return OldGet(Packet)
-        end
+        -- Blunder.getAndClear = function(...)
+        --     local Packet = ...
+        --     for i, v in next, Packet.list do
+        --         if v.message ~= "PING" then
+        --             OutputData(v.message)
+        --             table.remove(Packet.list, i)
+        --         end
+        --     end
+        --     return OldGet(Packet)
+        -- end
 
-        setreadonly(Blunder, true)
+        --setreadonly(Blunder, true)
     end)
 
     if not banSuccess then
@@ -79,9 +78,9 @@ if game.PlaceId == 6284583030 then
     assert(Library, "Oopps! Library has not been loaded. Maybe try re-joining?")
     while not Library.Loaded do task.wait() end
 
-    Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-    Humanoid = Character:WaitForChild("Humanoid")
-    HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+    --Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    --Humanoid = Character:WaitForChild("Humanoid")
+    --HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
 
 
     local bypassSuccess, bypassError = pcall(function()
@@ -174,9 +173,11 @@ if game.PlaceId == 6284583030 then
         return
     end
 
-    LocalPlayer.PlayerScripts:WaitForChild("Scripts", 10):WaitForChild("Game", 10):WaitForChild("Coins", 10)
-    LocalPlayer.PlayerScripts:WaitForChild("Scripts", 10):WaitForChild("Game", 10):WaitForChild("Pets", 10)
+    --LocalPlayer.PlayerScripts:WaitForChild("Scripts", 10):WaitForChild("Game", 10):WaitForChild("Coins", 10)
+    --LocalPlayer.PlayerScripts:WaitForChild("Scripts", 10):WaitForChild("Game", 10):WaitForChild("Pets", 10)
+
     wait()
+
     -- local orbsScript = getsenv(game.Players.LocalPlayer.PlayerScripts.Scripts.Game:WaitForChild("Orbs", 10))
     -- local CollectOrb = orbsScript.Collect
 
@@ -214,9 +215,6 @@ if game.PlaceId == 6284583030 then
 
             return APriority < BPriority
         end)
-
-
-
         return sortedCoins
     end
 
@@ -275,7 +273,6 @@ if game.PlaceId == 6284583030 then
             "Fruits",
             "Highest Multiplier",
             "Highest Life",
-
         }
 
         for priority, priorityName in ipairs(FarmFocusList) do
@@ -313,14 +310,12 @@ if game.PlaceId == 6284583030 then
                 break
             end
         end
-
-
         return coinPriority
     end
 
     --Hàm thu thập túi
     Library.Things:FindFirstChild("Lootbags").ChildAdded:Connect(function(child)
-        task.wait(0.05)
+        wait()
         if child then
             Library.Network.Fire("Collect Lootbag", child.Name,
                 HumanoidRootPart.Position +
@@ -333,19 +328,19 @@ if game.PlaceId == 6284583030 then
     --Hàm thu thập Orbs
     task.spawn(function()
         while true do
-            wait(0.05)
-            if FarmUtilities_CurrentOrbs and #FarmUtilities_CurrentOrbs > 0 then
-                Library.Network.Fire("Claim Orbs", FarmUtilities_CurrentOrbs)
-                table.clear(FarmUtilities_CurrentOrbs)
-                FarmUtilities_CurrentOrbs = {}
-            end
-        end
-    end)
-
-    Library.Things:FindFirstChild("Orbs").ChildAdded:Connect(function(child)
-        task.wait()
-        if child then
-            table.insert(FarmUtilities_CurrentOrbs, child.name)
+            pcall(function() 	
+                local OrbsToCollect = {}
+                for orbId, orb in pairs(Library.Things:FindFirstChild("Orbs"):GetChildren()) do
+                    if orbId and orb then
+                        table.insert(OrbsToCollect, orb.Name)
+                    end
+                end
+                
+                if OrbsToCollect and #OrbsToCollect > 0 then
+                    Library.Network.Fire("Claim Orbs", OrbsToCollect)
+                end
+            end)
+            wait(0.1)
         end
     end)
     warn("CollectOrb has Loaded")

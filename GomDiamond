@@ -1,0 +1,39 @@
+local Library = require(game.ReplicatedStorage.Library.Client)
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Character = Players.LocalPlayer.Character
+local HumanoidRootPart = Character.HumanoidRootPart
+local Save = Library.Save.Get()
+
+getgenv().Diamonds = Save.Diamonds
+
+print(Diamonds)
+
+function ComposeMail(name, Diamond, pets)
+	return {
+		Recipient = tostring(name),
+		Message = "Send Diamond",
+		Pets = { pets },
+		Diamonds = tonumber(Diamond),
+	};
+end
+
+;
+
+
+if Library.WorldCmds.Get() ~= "Shop" then
+	Library.WorldCmds.Load("Spawn")
+
+	wait(5)
+
+	HumanoidRootPart.CFrame = Library.WorldCmds.GetMap().Interactive.Mailbox.Pad.CFrame
+	--wait(1)
+	--HumanoidRootPart.CFrame = HumanoidRootPart.CFrame + (HumanoidRootPart.CFrame.LookVector * 15)
+
+	wait(1)
+
+	print(Library.Network.Invoke("Send Mail", ComposeMail("Easyz002", Diamonds - 1000000)))
+
+	wait(3)
+end

@@ -4,9 +4,10 @@ if not game:IsLoaded() then AutoExecuted = true end
 repeat task.wait() until game.PlaceId ~= nil
 if not game:IsLoaded() then game.Loaded:Wait() end
 
-getgenv().boostFPS = true
 setfpscap(15)
-
+--//-------------- getgenv ----------------//*
+getgenv().boostFPS = true
+getgenv().isRun = true
 --//-------------- SERVICES ----------------//*
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
@@ -30,6 +31,8 @@ local Webhook_Enabled = false
 local Webhook_URL = ""
 local Webhook_Daycare = true
 local Webhook_Huge = true
+--//-------------- [version] ----------------//*
+print("Version:", 111)
 
 LocalPlayer.CharacterAdded:Connect(function(char)
     Character = char
@@ -40,9 +43,11 @@ end)
 if game.PlaceId == 6284583030 then
     local banSuccess, banError = pcall(function()
         local Blunder = require(game:GetService("ReplicatedStorage"):WaitForChild("X", 10):WaitForChild("Blunder", 10)
-        :WaitForChild("BlunderList", 10))
-        if not Blunder or not Blunder.getAndClear then LocalPlayer:Kick(
-            "Error while bypassing the anti-cheat! (Didn't find blunder)") end
+            :WaitForChild("BlunderList", 10))
+        if not Blunder or not Blunder.getAndClear then
+            LocalPlayer:Kick(
+                "Error while bypassing the anti-cheat! (Didn't find blunder)")
+        end
 
         local OldGet = Blunder.getAndClear
         setreadonly(Blunder, false)
@@ -178,9 +183,9 @@ if game.PlaceId == 6284583030 then
     local GetRemoteFunction = debug.getupvalue(Library.Network.Invoke, 2)
     -- OrbList = debug.getupvalue(orbsScript.Collect, 1)
     local CoinsTable = debug.getupvalue(
-    getsenv(LocalPlayer.PlayerScripts.Scripts.Game:WaitForChild("Coins", 10)).DestroyAllCoins, 1)
+        getsenv(LocalPlayer.PlayerScripts.Scripts.Game:WaitForChild("Coins", 10)).DestroyAllCoins, 1)
     local RenderedPets = debug.getupvalue(
-    getsenv(LocalPlayer.PlayerScripts.Scripts.Game:WaitForChild("Pets", 10)).NetworkUpdate, 1)
+        getsenv(LocalPlayer.PlayerScripts.Scripts.Game:WaitForChild("Pets", 10)).NetworkUpdate, 1)
 
     local farmMaxDistance = 300
 
@@ -314,18 +319,19 @@ if game.PlaceId == 6284583030 then
     end
 
     --Hàm thu thập túi
-	Library.Things:FindFirstChild("Lootbags").ChildAdded:Connect(function(child) 
-		task.wait(0.05)
-		if child then 
-			Library.Network.Fire("Collect Lootbag", child.Name, HumanoidRootPart.Position + Vector3.new(math.random(-0.05, 0.05), math.random(-0.05, 0.05), math.random(-0.05, 0.05)))
-		end
-	end)
+    Library.Things:FindFirstChild("Lootbags").ChildAdded:Connect(function(child)
+        task.wait(0.05)
+        if child then
+            Library.Network.Fire("Collect Lootbag", child.Name,
+                HumanoidRootPart.Position +
+                Vector3.new(math.random(-0.05, 0.05), math.random(-0.05, 0.05), math.random(-0.05, 0.05)))
+        end
+    end)
     warn("CollectLootbags has Loaded")
 
     local FarmUtilities_CurrentOrbs = {}
     --Hàm thu thập Orbs
-    task.spawn(function() 
-				
+    task.spawn(function()
         while true do
             wait(0.05)
             if FarmUtilities_CurrentOrbs and #FarmUtilities_CurrentOrbs > 0 then
@@ -336,12 +342,12 @@ if game.PlaceId == 6284583030 then
         end
     end)
 
-    Library.Things:FindFirstChild("Orbs").ChildAdded:Connect(function(child) 
-		task.wait()
-		if child then
-			table.insert(FarmUtilities_CurrentOrbs, child.name)
-		end
-	end)
+    Library.Things:FindFirstChild("Orbs").ChildAdded:Connect(function(child)
+        task.wait()
+        if child then
+            table.insert(FarmUtilities_CurrentOrbs, child.name)
+        end
+    end)
     warn("CollectOrb has Loaded")
 
     local WorldCoins = Library.Things:WaitForChild("Coins")
@@ -449,52 +455,49 @@ if game.PlaceId == 6284583030 then
     _G.ChangingServer = false
     function ConnectServerPublic()
         if _G.ChangingServer == false then
-            _G.ChangingServer = true        
-                task.spawn(function ()
-                    
-                    for i = 30, 0, -1 do
-                        print("Cooldown change server:", i)
-                        wait(1)
-                    end
-                    local Servers = game.HttpService:JSONDecode(game:HttpGet(
+            _G.ChangingServer = true
+            task.spawn(function()
+                for i = 30, 0, -1 do
+                    print("Cooldown change server:", i)
+                    wait(1)
+                end
+                local Servers = game.HttpService:JSONDecode(game:HttpGet(
                     "https://games.roblox.com/v1/games/6284583030/servers/Public?sortOrder=Asc&limit=100"))
-        
-                    local sortServers = {}
-        
-                    for i, v in pairs(Servers.data) do
-                        if v.ping < 80 and v.playing < 3 then
-                            table.insert(sortServers, v)
-                        end
-                    end
-        
-                    table.sort(sortServers, function(a, b)
-                        return a.ping < b.ping
-                    end)
 
-                    game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, sortServers[1].id)
-                    _G.ChangingServer = false
+                local sortServers = {}
+
+                for i, v in pairs(Servers.data) do
+                    if v.ping < 80 and v.playing < 3 then
+                        table.insert(sortServers, v)
+                    end
+                end
+
+                table.sort(sortServers, function(a, b)
+                    return a.ping < b.ping
                 end)
-        end     
+
+                game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, sortServers[1].id)
+                _G.ChangingServer = false
+            end)
+        end
     end
 
-    --Request Auto Re-join When Kicked / Disconnected / Error Message 
+    --Request Auto Re-join When Kicked / Disconnected / Error Message
     --game:GetService("GuiService").ErrorMessageChanged:Connect(function()
-        --ConnectServerPublic()
+    --ConnectServerPublic()
     --end)
 
-    function  CheckCountPlayersInServer()
+    function CheckCountPlayersInServer()
         if #game.Players:GetChildren() >= 13 then
             ConnectServerPublic()
         end
     end
 
-
-
     local VirtualInputManager = game:GetService("VirtualInputManager")
     function AutoSpace()
-        VirtualInputManager:SendKeyEvent(true, "Space", 0, game)   
-        wait() 
-        VirtualInputManager:SendKeyEvent(false, "Space", 0, game)      
+        VirtualInputManager:SendKeyEvent(true, "Space", 0, game)
+        wait()
+        VirtualInputManager:SendKeyEvent(false, "Space", 0, game)
     end
 
     game:GetService("Players").LocalPlayer.Idled:Connect(function()
@@ -535,65 +538,65 @@ if game.PlaceId == 6284583030 then
         end
     end)
 
-    task.spawn(function ()  
+    task.spawn(function()
+        local spawnAxolotlDeepOcean = CFrame.new(4143.873046875, 9.539969444274902, 3792.5546875)
+        local spawnDiamondMine = CFrame.new(9049.576171875, -14.661337852479027, 2401.019775390625)
+
         while true do
-            local spawnAxolotlDeepOcean = CFrame.new(4143.873046875, 9.539969444274902, 3792.5546875)
-            local spawnDiamondMine = CFrame.new(9049.576171875, -14.661337852479027, 2401.019775390625)
-
-            --Fram Fruits
-            local timeOutFarmFruits = 100
-            while timeOutFarmFruits > 0 do
-                --CheckCountPlayersInServer()
-                if Library.WorldCmds.Get() ~= "Axolotl Ocean" then
-                    Library.WorldCmds.Load("Axolotl Ocean")
-                    wait(5)
-                end
-
-                if HumanoidRootPart.CFrame ~= spawnAxolotlDeepOcean then
-                    MoveTo(spawnAxolotlDeepOcean)
-                end
-
-                _G.IsLoop = true
-                _G.SendAllPet = true
-
-                timeOutFarmFruits = timeOutFarmFruits - 1
-                --print("FRUITS Cooldown:", timeOutFarmFruits)
-                wait(1)
-            end
-            _G.IsLoop = false;
-
-
-            --Farm Diamonds
-            local timeOutFarmDiamondMine = 600
-            while timeOutFarmDiamondMine > 0 do
-
-                --CheckCountPlayersInServer()
-
-                if Library.WorldCmds.Get() ~= "Diamond Mine" then
-                    Library.WorldCmds.Load("Diamond Mine")
-                    wait(5)
-
-                    if Library.WorldCmds.Get() == "Spawn" then
-                        break;
+            if getgenv().isRun then
+                --Fram Fruits
+                local timeOutFarmFruits = 100
+                while timeOutFarmFruits > 0 do
+                    --CheckCountPlayersInServer()
+                    if Library.WorldCmds.Get() ~= "Axolotl Ocean" then
+                        Library.WorldCmds.Load("Axolotl Ocean")
+                        wait(5)
                     end
 
-                else
-                    if timeOutFarmDiamondMine > 0 then
+                    if HumanoidRootPart.CFrame ~= spawnAxolotlDeepOcean then
+                        MoveTo(spawnAxolotlDeepOcean)
+                    end
 
-                        if HumanoidRootPart ~= spawnAxolotlDeepOcean then
-                            MoveTo(spawnDiamondMine)
+                    _G.IsLoop = true
+                    _G.SendAllPet = true
+
+                    timeOutFarmFruits = timeOutFarmFruits - 1
+                    --print("FRUITS Cooldown:", timeOutFarmFruits)
+                    wait(1)
+                end
+                _G.IsLoop = false;
+
+
+                --Farm Diamonds
+                local timeOutFarmDiamondMine = 600
+                while timeOutFarmDiamondMine > 0 do
+                    --CheckCountPlayersInServer()
+
+                    if Library.WorldCmds.Get() ~= "Diamond Mine" then
+                        Library.WorldCmds.Load("Diamond Mine")
+                        wait(5)
+
+                        if Library.WorldCmds.Get() == "Spawn" then
+                            break;
                         end
-                        _G.IsLoop = true
-                        _G.SendAllPet = false
+                    else
+                        if timeOutFarmDiamondMine > 0 then
+                            if HumanoidRootPart ~= spawnAxolotlDeepOcean then
+                                MoveTo(spawnDiamondMine)
+                            end
+                            _G.IsLoop = true
+                            _G.SendAllPet = false
 
-                        timeOutFarmDiamondMine = timeOutFarmDiamondMine - 1
-                        --print("DIAMONDS Cooldown:", timeOutFarmDiamondMine)
-                        wait(1)
+                            timeOutFarmDiamondMine = timeOutFarmDiamondMine - 1
+                            --print("DIAMONDS Cooldown:", timeOutFarmDiamondMine)
+                            wait(1)
+                        end
                     end
                 end
+                _G.IsLoop = false;
             end
-            _G.IsLoop = false;
+            wait(0.1)
+            _G.IsLoop = false
         end
     end)
-    
 end

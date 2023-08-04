@@ -5,7 +5,6 @@ repeat task.wait() until game.PlaceId ~= nil
 if not game:IsLoaded() then game.Loaded:Wait() end
 
 --//-------------- getgenv ----------------//*
-getgenv().boostFPS = true
 getgenv().isRun = true
 --//-------------- SERVICES ----------------//*
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -79,9 +78,9 @@ if game.PlaceId == 6284583030 then
     assert(Library, "Oopps! Library has not been loaded. Maybe try re-joining?")
     while not Library.Loaded do task.wait() end
 
-    --Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-    --Humanoid = Character:WaitForChild("Humanoid")
-    --HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+    Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    Humanoid = Character:WaitForChild("Humanoid")
+    HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
 
 
     local bypassSuccess, bypassError = pcall(function()
@@ -538,14 +537,14 @@ if game.PlaceId == 6284583030 then
         local spawnAxolotlDeepOcean = CFrame.new(4143.873046875, 9.539969444274902, 3792.5546875)
         local cameraAxolotl = CFrame.new(
             4190.65625, 90.2267075, 3831.80762,
-            0.642760336, -0.606623769, 0.467831969, 
+            0.642760336, -0.606623769, 0.467831969,
             0, 1.4901163e-08, 0.610693038, 0.791867375, -0.50898093, 0.392529249
         )
         local spawnDiamondMine = CFrame.new(9049.576171875, -14.661337852479027, 2401.019775390625)
         local cameraDiamon = CFrame.new(
             9061.69238, 62.190361, 2336.40308,
             -0.982870579, -0.138870955, 0.121162109,
-            0, 0.657428324, 0.753516972, -0.184297055, 0.740609646, -0.64616698        
+            0, 0.657428324, 0.753516972, -0.184297055, 0.740609646, -0.64616698
         )
 
         while true do

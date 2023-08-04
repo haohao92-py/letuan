@@ -15,7 +15,8 @@ local HttpService = game:GetService("HttpService")
 local InputService = game:GetService('UserInputService')
 local RunService = game:GetService('RunService')
 local ContentProvider = game:GetService("ContentProvider")
-
+local VirtualInputManager = game:GetService("VirtualInputManager")
+local Camera = workspace.CurrentCamera
 --//*--------- GLOBAL VARIABLES -----------//*
 local ScriptIsCurrentlyBusy = false
 local Character = nil
@@ -31,7 +32,7 @@ local Webhook_URL = ""
 local Webhook_Daycare = true
 local Webhook_Huge = true
 --//-------------- [version] ----------------//*
-print("Version:", 115)
+print("Version:", 125)
 
 LocalPlayer.CharacterAdded:Connect(function(char)
     Character = char
@@ -239,6 +240,7 @@ if game.PlaceId == 6284583030 then
         return sortedCoins
     end
 
+    --Hàm tính HP của Coins
     function CalcMultiplier(coinBonus)
         if not coinBonus then return 0 end
         local totalMultiplier = 0
@@ -254,6 +256,7 @@ if game.PlaceId == 6284583030 then
         return totalMultiplier
     end
 
+    --Sắp xếp theo thứ tự coins cần farm
     function GetCoinLowestPriority(mainCoin, coinToCompare)
         local coin = Library.Directory.Coins[mainCoin.n]
         local coinCompare = Library.Directory.Coins[coinToCompare.n]
@@ -313,38 +316,6 @@ if game.PlaceId == 6284583030 then
         return coinPriority
     end
 
-    --Hàm thu thập túi
-    Library.Things:FindFirstChild("Lootbags").ChildAdded:Connect(function(child)
-        wait()
-        if child then
-            Library.Network.Fire("Collect Lootbag", child.Name,
-                HumanoidRootPart.Position +
-                Vector3.new(math.random(-0.05, 0.05), math.random(-0.05, 0.05), math.random(-0.05, 0.05)))
-        end
-    end)
-    warn("CollectLootbags has Loaded")
-
-    local FarmUtilities_CurrentOrbs = {}
-    --Hàm thu thập Orbs
-    task.spawn(function()
-        while true do
-            pcall(function() 	
-                local OrbsToCollect = {}
-                for orbId, orb in pairs(Library.Things:FindFirstChild("Orbs"):GetChildren()) do
-                    if orbId and orb then
-                        table.insert(OrbsToCollect, orb.Name)
-                    end
-                end
-                
-                if OrbsToCollect and #OrbsToCollect > 0 then
-                    Library.Network.Fire("Claim Orbs", OrbsToCollect)
-                end
-            end)
-            wait(0.1)
-        end
-    end)
-    warn("CollectOrb has Loaded")
-
     local WorldCoins = Library.Things:WaitForChild("Coins")
 
     WorldCoins.ChildAdded:Connect(function(ch)
@@ -358,6 +329,104 @@ if game.PlaceId == 6284583030 then
     end)
     warn("InstantLand Fall Coin has Loaded")
 
+    function MoveTo(position)
+        HumanoidRootPart.CFrame = position
+    end
+
+    _G.ChangingServer = false
+    function ConnectServerPublic()
+        if _G.ChangingServer == false then
+            _G.ChangingServer = true
+            task.spawn(function()
+                for i = 30, 0, -1 do
+                    print("Cooldown change server:", i)
+                    wait(1)
+                end
+                local Servers = game.HttpService:JSONDecode(game:HttpGet(
+                    "https://games.roblox.com/v1/games/6284583030/servers/Public?sortOrder=Asc&limit=100"))
+
+                local sortServers = {}
+
+                for i, v in pairs(Servers.data) do
+                    if v.ping < 80 and v.playing < 3 then
+                        table.insert(sortServers, v)
+                    end
+                end
+
+                table.sort(sortServers, function(a, b)
+                    return a.ping < b.ping
+                end)
+
+                game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, sortServers[1].id)
+                _G.ChangingServer = false
+            end)
+        end
+    end
+
+    --Request Auto Re-join When Kicked / Disconnected / Error Message
+    --game:GetService("GuiService").ErrorMessageChanged:Connect(function()
+    --ConnectServerPublic()
+    --end)
+
+    function CheckCountPlayersInServer()
+        if #game.Players:GetChildren() >= 13 then
+            ConnectServerPublic()
+        end
+    end
+
+    function AutoSpace()
+        VirtualInputManager:SendKeyEvent(true, "Space", 0, game)
+        wait()
+        VirtualInputManager:SendKeyEvent(false, "Space", 0, game)
+    end
+
+    game:GetService("Players").LocalPlayer.Idled:Connect(function()
+        AutoSpace()
+    end)
+    warn("Anti-Afk has Loaded")
+
+    _G.IsLoop = false
+    _G.SendAllPet = false
+
+    --Hàm thu thập lootbags
+    task.spawn(function()
+        pcall(function()
+            while true do
+                for _, lootbag in pairs(Library.Things:FindFirstChild("Lootbags"):GetChildren()) do
+                    if lootbag and not lootbag:GetAttribute("Collected") then
+                        Library.Network.Fire("Collect Lootbag", lootbag.Name,
+                            HumanoidRootPart.Position +
+                            Vector3.new(math.random(-0.05, 0.05), math.random(-0.05, 0.05), math.random(-0.05, 0.05)))
+                        wait(0.03)
+                    end
+                end
+                wait(0.1)
+            end
+        end)
+    end)
+    warn("CollectLootbags has Loaded")
+
+    --Hàm thu thập Orbs
+    task.spawn(function()
+        while true do
+            pcall(function()
+                local OrbsToCollect = {}
+                for orbId, orb in pairs(Library.Things:FindFirstChild("Orbs"):GetChildren()) do
+                    if orbId and orb then
+                        table.insert(OrbsToCollect, orb.Name)
+                    end
+                end
+
+                if OrbsToCollect and #OrbsToCollect > 0 then
+                    Library.Network.Fire("Claim Orbs", OrbsToCollect)
+                end
+            end)
+            wait(0.1)
+        end
+    end)
+    warn("CollectOrb has Loaded")
+
+    --Auto Farm COINS
     task.spawn(function()
         while true do
             if _G.IsLoop then
@@ -443,84 +512,15 @@ if game.PlaceId == 6284583030 then
         end
     end)
 
-    function MoveTo(position)
-        HumanoidRootPart.CFrame = position
-    end
-
-    _G.ChangingServer = false
-    function ConnectServerPublic()
-        if _G.ChangingServer == false then
-            _G.ChangingServer = true
-            task.spawn(function()
-                for i = 30, 0, -1 do
-                    print("Cooldown change server:", i)
-                    wait(1)
-                end
-                local Servers = game.HttpService:JSONDecode(game:HttpGet(
-                    "https://games.roblox.com/v1/games/6284583030/servers/Public?sortOrder=Asc&limit=100"))
-
-                local sortServers = {}
-
-                for i, v in pairs(Servers.data) do
-                    if v.ping < 80 and v.playing < 3 then
-                        table.insert(sortServers, v)
-                    end
-                end
-
-                table.sort(sortServers, function(a, b)
-                    return a.ping < b.ping
-                end)
-
-                game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, sortServers[1].id)
-                _G.ChangingServer = false
-            end)
-        end
-    end
-
-    --Request Auto Re-join When Kicked / Disconnected / Error Message
-    --game:GetService("GuiService").ErrorMessageChanged:Connect(function()
-    --ConnectServerPublic()
-    --end)
-
-    function CheckCountPlayersInServer()
-        if #game.Players:GetChildren() >= 13 then
-            ConnectServerPublic()
-        end
-    end
-
-    local VirtualInputManager = game:GetService("VirtualInputManager")
-    function AutoSpace()
-        VirtualInputManager:SendKeyEvent(true, "Space", 0, game)
-        wait()
-        VirtualInputManager:SendKeyEvent(false, "Space", 0, game)
-    end
-
-    game:GetService("Players").LocalPlayer.Idled:Connect(function()
-        AutoSpace()
-    end)
-
-    warn("Anti-Afk has Loaded")
-
-    _G.IsLoop = false
-    _G.SendAllPet = false
-
-    --teleportto("Axolotl Deep Ocean")
-    --task.wait(5)
-    --MoveTo(spawnAxolotlDeepOcean)
-
-
     task.spawn(function()
         while true do
             if _G.IsLoop then
-                --print("RedeemFreeGift")
                 for i = 1, 12 do
                     Library.Network.Invoke("Redeem Free Gift", i)
                     wait(2)
                 end
 
-                --print("Use Boost Inventory")
-                local Save = Library.Save.Get()
-                local BoostsInventory = Save.BoostsInventory
+                local BoostsInventory = Library.Save.Get().BoostsInventory
                 for i, v in pairs(BoostsInventory) do
                     if tonumber(v) ~= 0 then
                         Library.Network.Fire("Activate Boost", i)
@@ -532,10 +532,21 @@ if game.PlaceId == 6284583030 then
             wait(0.5)
         end
     end)
+    warn("Auto Redeem & Activate Boosts")
 
     task.spawn(function()
         local spawnAxolotlDeepOcean = CFrame.new(4143.873046875, 9.539969444274902, 3792.5546875)
+        local cameraAxolotl = CFrame.new(
+            4190.65625, 90.2267075, 3831.80762,
+            0.642760336, -0.606623769, 0.467831969, 
+            0, 1.4901163e-08, 0.610693038, 0.791867375, -0.50898093, 0.392529249
+        )
         local spawnDiamondMine = CFrame.new(9049.576171875, -14.661337852479027, 2401.019775390625)
+        local cameraDiamon = CFrame.new(
+            9061.69238, 62.190361, 2336.40308,
+            -0.982870579, -0.138870955, 0.121162109,
+            0, 0.657428324, 0.753516972, -0.184297055, 0.740609646, -0.64616698        
+        )
 
         while true do
             if getgenv().isRun then
@@ -545,12 +556,11 @@ if game.PlaceId == 6284583030 then
                     --CheckCountPlayersInServer()
                     if Library.WorldCmds.Get() ~= "Axolotl Ocean" then
                         Library.WorldCmds.Load("Axolotl Ocean")
-                        wait(5)
+                        wait(3)
                     end
 
-                    if HumanoidRootPart.CFrame ~= spawnAxolotlDeepOcean then
-                        MoveTo(spawnAxolotlDeepOcean)
-                    end
+                    MoveTo(spawnAxolotlDeepOcean)
+                    Camera.CFrame = cameraAxolotl
 
                     _G.IsLoop = true
                     _G.SendAllPet = true
@@ -569,16 +579,15 @@ if game.PlaceId == 6284583030 then
 
                     if Library.WorldCmds.Get() ~= "Diamond Mine" then
                         Library.WorldCmds.Load("Diamond Mine")
-                        wait(5)
+                        MoveTo(spawnDiamondMine)
+                        Camera.CFrame = cameraDiamon
+                        wait(3)
 
                         if Library.WorldCmds.Get() == "Spawn" then
                             break;
                         end
                     else
                         if timeOutFarmDiamondMine > 0 then
-                            if HumanoidRootPart ~= spawnAxolotlDeepOcean then
-                                MoveTo(spawnDiamondMine)
-                            end
                             _G.IsLoop = true
                             _G.SendAllPet = false
 

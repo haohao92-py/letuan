@@ -551,6 +551,7 @@ if game.PlaceId == 6284583030 then
             if getgenv().isRun then
                 --Fram Fruits
                 local timeOutFarmFruits = 100
+                local isMoveAxolotl = false
                 while timeOutFarmFruits > 0 and getgenv().isRun do
                     --CheckCountPlayersInServer()
                     if Library.WorldCmds.Get() ~= "Axolotl Ocean" then
@@ -558,8 +559,10 @@ if game.PlaceId == 6284583030 then
                         wait(3)
                     end
 
-                    HumanoidRootPart.CFrame = spawnAxolotlDeepOcean
-                    Camera.CFrame = cameraAxolotl
+                    if  isMoveAxolotl == false then
+                        HumanoidRootPart.CFrame = spawnAxolotlDeepOcean
+                        isMoveAxolotl = true
+                    end
 
                     _G.IsLoop = true
                     _G.SendAllPet = true
@@ -573,27 +576,30 @@ if game.PlaceId == 6284583030 then
 
                 --Farm Diamonds
                 local timeOutFarmDiamondMine = 600
+                local isMoveDiamod = false
                 while timeOutFarmDiamondMine > 0 and getgenv().isRun do
                     --CheckCountPlayersInServer()
 
                     if Library.WorldCmds.Get() ~= "Diamond Mine" then
                         Library.WorldCmds.Load("Diamond Mine")
-                        HumanoidRootPart = spawnDiamondMine
-                        Camera.CFrame = cameraDiamon
                         wait(3)
 
                         if Library.WorldCmds.Get() == "Spawn" then
                             break;
                         end
                     else
-                        if timeOutFarmDiamondMine > 0 then
-                            _G.IsLoop = true
-                            _G.SendAllPet = false
 
-                            timeOutFarmDiamondMine = timeOutFarmDiamondMine - 1
-                            --print("DIAMONDS Cooldown:", timeOutFarmDiamondMine)
-                            wait(1)
+                        if isMoveDiamod == false then
+                            HumanoidRootPart = spawnDiamondMine
+                            isMoveDiamod = true
                         end
+
+                        _G.IsLoop = true
+                        _G.SendAllPet = false
+
+                        timeOutFarmDiamondMine = timeOutFarmDiamondMine - 1
+                        --print("DIAMONDS Cooldown:", timeOutFarmDiamondMine)
+                        wait(1)
                     end
                 end
                 _G.IsLoop = false;

@@ -315,7 +315,7 @@ if game.PlaceId == 6284583030 then
 
     --Hàm thu thập túi
 	Library.Things:FindFirstChild("Lootbags").ChildAdded:Connect(function(child) 
-		wait()
+		task.wait(0.05)
 		if child then 
 			Library.Network.Fire("Collect Lootbag", child.Name, HumanoidRootPart.Position + Vector3.new(math.random(-0.05, 0.05), math.random(-0.05, 0.05), math.random(-0.05, 0.05)))
 		end
@@ -387,7 +387,7 @@ if game.PlaceId == 6284583030 then
                                 end
 
                                 table.remove(foundCoins, 1)
-                                task.wait(0.05)
+                                task.wait(0.1)
                             end
                         end
                     end
@@ -543,7 +543,7 @@ if game.PlaceId == 6284583030 then
             --Fram Fruits
             local timeOutFarmFruits = 100
             while timeOutFarmFruits > 0 do
-                CheckCountPlayersInServer()
+                --CheckCountPlayersInServer()
                 if Library.WorldCmds.Get() ~= "Axolotl Ocean" then
                     Library.WorldCmds.Load("Axolotl Ocean")
                     wait(5)
@@ -567,8 +567,8 @@ if game.PlaceId == 6284583030 then
             local timeOutFarmDiamondMine = 600
             while timeOutFarmDiamondMine > 0 do
 
-                CheckCountPlayersInServer()
-                
+                --CheckCountPlayersInServer()
+
                 if Library.WorldCmds.Get() ~= "Diamond Mine" then
                     Library.WorldCmds.Load("Diamond Mine")
                     wait(5)

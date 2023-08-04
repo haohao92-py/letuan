@@ -560,6 +560,7 @@ if game.PlaceId == 6284583030 then
                     end
 
                     if  isMoveAxolotl == false then
+                        wait(1)
                         HumanoidRootPart.CFrame = spawnAxolotlDeepOcean
                         isMoveAxolotl = true
                     end

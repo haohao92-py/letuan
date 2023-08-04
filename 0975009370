@@ -547,6 +547,8 @@ if game.PlaceId == 6284583030 then
             0, 0.657428324, 0.753516972, -0.184297055, 0.740609646, -0.64616698
         )
 
+        Library.WorldCmds.Load("Spawn")
+
         while true do
             if getgenv().isRun then
                 --Fram Fruits
@@ -556,7 +558,7 @@ if game.PlaceId == 6284583030 then
                     --CheckCountPlayersInServer()
                     if Library.WorldCmds.Get() ~= "Axolotl Ocean" then
                         Library.WorldCmds.Load("Axolotl Ocean")
-                        wait(3)
+                        wait(5)
                     end
 
                     if  isMoveAxolotl == false then
@@ -583,7 +585,7 @@ if game.PlaceId == 6284583030 then
 
                     if Library.WorldCmds.Get() ~= "Diamond Mine" then
                         Library.WorldCmds.Load("Diamond Mine")
-                        wait(3)
+                        wait(5)
 
                         if Library.WorldCmds.Get() == "Spawn" then
                             break;

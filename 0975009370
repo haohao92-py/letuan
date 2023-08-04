@@ -32,7 +32,7 @@ local Webhook_URL = ""
 local Webhook_Daycare = true
 local Webhook_Huge = true
 --//-------------- [version] ----------------//*
-print("Version:", 111)
+print("Version:", 112)
 
 LocalPlayer.CharacterAdded:Connect(function(char)
     Character = char
@@ -546,7 +546,7 @@ if game.PlaceId == 6284583030 then
             if getgenv().isRun then
                 --Fram Fruits
                 local timeOutFarmFruits = 100
-                while timeOutFarmFruits > 0 do
+                while timeOutFarmFruits > 0 and getgenv().isRun do
                     --CheckCountPlayersInServer()
                     if Library.WorldCmds.Get() ~= "Axolotl Ocean" then
                         Library.WorldCmds.Load("Axolotl Ocean")
@@ -569,7 +569,7 @@ if game.PlaceId == 6284583030 then
 
                 --Farm Diamonds
                 local timeOutFarmDiamondMine = 600
-                while timeOutFarmDiamondMine > 0 do
+                while timeOutFarmDiamondMine > 0 and getgenv().isRun do
                     --CheckCountPlayersInServer()
 
                     if Library.WorldCmds.Get() ~= "Diamond Mine" then

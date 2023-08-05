@@ -340,8 +340,8 @@ if game.PlaceId == 6284583030 then
         if _G.ChangingServer == false then
             _G.ChangingServer = true
             task.spawn(function()
-                if getgenv().delayChangeServer and getgenv().delayChangeServer > 0 then
-                    wait(getgenv().delayChangeServer)
+                if getgenv().indexChangeServer then
+                    wait(getgenv().indexChangeServer*60)
                 else
                     wait(60)
                 end

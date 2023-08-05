@@ -334,14 +334,13 @@ if game.PlaceId == 6284583030 then
         HumanoidRootPart.CFrame = position
     end
 
-    local delayChangeServer = {60, 120, 180, 240}
     _G.ChangingServer = false
-    function ConnectServerPublic()
+    function ConnectServerPublic(delayChange)
         if getgenv().isChangeServer and getgenv().isChangeServer == false then return end
         if _G.ChangingServer == false then
             _G.ChangingServer = true
             task.spawn(function()
-                wait(delayChangeServer[math.random(1, #delayChangeServer)])
+                wait(delayChange)
                 local Servers = game.HttpService:JSONDecode(game:HttpGet(
                     "https://games.roblox.com/v1/games/6284583030/servers/Public?sortOrder=Asc&limit=100"))
 
@@ -368,9 +367,9 @@ if game.PlaceId == 6284583030 then
     --ConnectServerPublic()
     --end)
 
-    function CheckCountPlayersInServer()
+    function CheckCountPlayersInServer(delayChange)
         if #game.Players:GetChildren() >= getgenv().countPlayersToChange then
-            ConnectServerPublic()
+            ConnectServerPublic(delayChange)
         end
     end
 
@@ -550,11 +549,13 @@ if game.PlaceId == 6284583030 then
             0, 0.657428324, 0.753516972, -0.184297055, 0.740609646, -0.64616698
         )
 
+        CheckCountPlayersInServer(300)
+
         Library.WorldCmds.Load("Spawn")
         wait(5)
 
-        local countFarmDiamond = 4
-        local countFarmFruit = 4
+        local isFarmFruits = false
+        local isFarmDiamonds = false
         while true do
             if getgenv().isRun then
                 --Fram Fruits
@@ -570,7 +571,7 @@ if game.PlaceId == 6284583030 then
                     if  isMoveAxolotl == false then
                         wait(1)
                         HumanoidRootPart.CFrame = spawnAxolotlDeepOcean
-                        countFarmFruit = countFarmFruit -1
+                        isFarmFruits = true
                         isMoveAxolotl = true
                     end
 
@@ -602,7 +603,7 @@ if game.PlaceId == 6284583030 then
                         if isMoveDiamod == false then
                             wait(1)
                             HumanoidRootPart.CFrame = spawnDiamondMine
-                            countFarmDiamond = countFarmDiamond - 1
+                            isFarmDiamonds = true
                             isMoveDiamod = true
                         end
 
@@ -615,8 +616,8 @@ if game.PlaceId == 6284583030 then
                     end
                 end
 
-                if countFarmDiamond == 0 or countFarmFruit == 0 then
-                    ConnectServerPublic()
+                if isFarmDiamonds == 0 and isFarmFruits == 0 then
+                        CheckCountPlayersInServer(1)
                 end
 
             end

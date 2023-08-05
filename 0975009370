@@ -6,7 +6,6 @@ if not game:IsLoaded() then game.Loaded:Wait() end
 
 --//-------------- getgenv ----------------//*
 getgenv().isRun = true
-getgenv().isChangeServer = false
 getgenv().countPlayersToChange = 5
 getgenv().delayFarmCoins = 0.05
 --//-------------- SERVICES ----------------//*
@@ -337,7 +336,7 @@ if game.PlaceId == 6284583030 then
 
     _G.ChangingServer = false
     function ConnectServerPublic()
-        if getgenv().isChangeServer == false then return end
+        if getgenv().isChangeServer and getgenv().isChangeServer == false then return end
         if _G.ChangingServer == false then
             _G.ChangingServer = true
             task.spawn(function()

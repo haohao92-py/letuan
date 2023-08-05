@@ -350,7 +350,7 @@ if game.PlaceId == 6284583030 then
                 local sortServers = {}
 
                 for i, v in pairs(Servers.data) do
-                    if v.ping < 80 and v.playing < 3 then
+                    if v.ping and v.ping < 80 and v.playing and v.playing <= 2 then
                         table.insert(sortServers, v)
                     end
                 end

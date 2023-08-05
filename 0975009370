@@ -602,6 +602,7 @@ if game.PlaceId == 6284583030 then
                         if isMoveDiamod == false then
                             wait(1)
                             HumanoidRootPart.CFrame = spawnDiamondMine
+                            timeOutLoop = timeOutLoop - 1
                             isMoveDiamod = true
                         end
 
@@ -613,12 +614,14 @@ if game.PlaceId == 6284583030 then
                         wait(1)
                     end
                 end
+                
                 _G.IsLoop = false;
                 CheckCountPlayersInServer()
-                timeOutLoop = timeOutLoop - 1
+
                 if timeOutLoop == 0 then
                     ConnectServerPublic()
                 end
+
             end
             wait(0.1)
             _G.IsLoop = false

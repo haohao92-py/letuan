@@ -335,12 +335,16 @@ if game.PlaceId == 6284583030 then
     end
 
     _G.ChangingServer = false
-    function ConnectServerPublic(delayChange)
+    function ConnectServerPublic()
         if getgenv().isChangeServer and getgenv().isChangeServer == false then return end
         if _G.ChangingServer == false then
             _G.ChangingServer = true
             task.spawn(function()
-                wait(delayChange)
+                if getgenv().delayChangeServer and getgenv().delayChangeServer > 0 then
+                    wait(getgenv().delayChangeServer)
+                else
+                    wait(60)
+                end
                 local Servers = game.HttpService:JSONDecode(game:HttpGet(
                     "https://games.roblox.com/v1/games/6284583030/servers/Public?sortOrder=Asc&limit=100"))
 
@@ -367,9 +371,9 @@ if game.PlaceId == 6284583030 then
     ConnectServerPublic(math.random(60, 300))
     end)
 
-    function CheckCountPlayersInServer(delayChange)
+    function CheckCountPlayersInServer()
         if #game.Players:GetChildren() >= getgenv().countPlayersToChange then
-            ConnectServerPublic(delayChange)
+            ConnectServerPublic()
         end
     end
 
@@ -549,8 +553,6 @@ if game.PlaceId == 6284583030 then
             0, 0.657428324, 0.753516972, -0.184297055, 0.740609646, -0.64616698
         )
 
-        CheckCountPlayersInServer(300)
-
         Library.WorldCmds.Load("Spawn")
         wait(5)
 
@@ -617,7 +619,7 @@ if game.PlaceId == 6284583030 then
                 end
 
                 if isFarmDiamonds == 0 and isFarmFruits == 0 then
-                        CheckCountPlayersInServer(1)
+                        CheckCountPlayersInServer()
                 end
 
             end

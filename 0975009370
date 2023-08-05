@@ -337,39 +337,37 @@ if game.PlaceId == 6284583030 then
     _G.ChangingServer = false
     function ConnectServerPublic()
         if getgenv().isChangeServer and getgenv().isChangeServer == false then return end
-        if _G.ChangingServer == false then
-            _G.ChangingServer = true
-            task.spawn(function()
-                if getgenv().indexChangeServer then
-                    wait(getgenv().indexChangeServer*60)
-                else
-                    wait(60)
+        task.spawn(function()
+            if getgenv().indexChangeServer then
+                wait(getgenv().indexChangeServer * 60)
+            else
+                wait(60)
+            end
+            local Servers = game.HttpService:JSONDecode(game:HttpGet(
+                "https://games.roblox.com/v1/games/6284583030/servers/Public?sortOrder=Asc&limit=100"))
+
+            local sortServers = {}
+
+            for i, v in pairs(Servers.data) do
+                if v.ping and v.ping < 80 and v.playing and v.playing <= 2 then
+                    table.insert(sortServers, v)
                 end
-                local Servers = game.HttpService:JSONDecode(game:HttpGet(
-                    "https://games.roblox.com/v1/games/6284583030/servers/Public?sortOrder=Asc&limit=100"))
+            end
 
-                local sortServers = {}
-
-                for i, v in pairs(Servers.data) do
-                    if v.ping and v.ping < 80 and v.playing and v.playing <= 2 then
-                        table.insert(sortServers, v)
-                    end
-                end
-
-                table.sort(sortServers, function(a, b)
-                    return a.ping < b.ping
-                end)
-
-                game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, sortServers[math.random(1, #sortServers)].id)
-                _G.ChangingServer = false
+            table.sort(sortServers, function(a, b)
+                return a.ping < b.ping
             end)
-        end
+
+            game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId,
+                sortServers[math.random(1, #sortServers)].id)
+            _G.ChangingServer = false
+        end)
     end
 
-    --Request Auto Re-join When Kicked / Disconnected / Error Message
-    game:GetService("GuiService").ErrorMessageChanged:Connect(function()
-    ConnectServerPublic(math.random(60, 300))
-    end)
+    -- --Request Auto Re-join When Kicked / Disconnected / Error Message
+    -- game:GetService("GuiService").ErrorMessageChanged:Connect(function()
+    --     ConnectServerPublic()
+    -- end)
 
     function CheckCountPlayersInServer()
         if #game.Players:GetChildren() >= getgenv().countPlayersToChange then
@@ -437,8 +435,10 @@ if game.PlaceId == 6284583030 then
     task.spawn(function()
         while true do
             if _G.IsLoop then
-                local RenderedPets = debug.getupvalue(getsenv(LocalPlayer.PlayerScripts.Scripts.Game.Pets).NetworkUpdate, 1)
-                local CoinsTable = debug.getupvalue(getsenv(LocalPlayer.PlayerScripts.Scripts.Game.Coins).DestroyAllCoins, 1)
+                local RenderedPets = debug.getupvalue(getsenv(LocalPlayer.PlayerScripts.Scripts.Game.Pets).NetworkUpdate,
+                    1)
+                local CoinsTable = debug.getupvalue(
+                getsenv(LocalPlayer.PlayerScripts.Scripts.Game.Coins).DestroyAllCoins, 1)
 
                 --print("Coin tim thay", #foundCoins)
 
@@ -570,7 +570,7 @@ if game.PlaceId == 6284583030 then
                         wait(5)
                     end
 
-                    if  isMoveAxolotl == false then
+                    if isMoveAxolotl == false then
                         wait(1)
                         HumanoidRootPart.CFrame = spawnAxolotlDeepOcean
                         isFarmFruits = true
@@ -601,7 +601,6 @@ if game.PlaceId == 6284583030 then
                             break;
                         end
                     else
-
                         if isMoveDiamod == false then
                             wait(1)
                             HumanoidRootPart.CFrame = spawnDiamondMine
@@ -619,9 +618,8 @@ if game.PlaceId == 6284583030 then
                 end
 
                 if isFarmDiamonds == 0 and isFarmFruits == 0 then
-                        CheckCountPlayersInServer()
+                    CheckCountPlayersInServer()
                 end
-
             end
             wait(0.1)
             _G.IsLoop = false

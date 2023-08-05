@@ -334,16 +334,14 @@ if game.PlaceId == 6284583030 then
         HumanoidRootPart.CFrame = position
     end
 
+    local delayChangeServer = {60, 120, 180, 240}
     _G.ChangingServer = false
     function ConnectServerPublic()
         if getgenv().isChangeServer and getgenv().isChangeServer == false then return end
         if _G.ChangingServer == false then
             _G.ChangingServer = true
             task.spawn(function()
-                -- for i = 600, 0, -1 do
-                --     print("Cooldown change server:", i)
-                --     wait(1)
-                -- end
+                wait(delayChangeServer[math.random(1, #delayChangeServer)])
                 local Servers = game.HttpService:JSONDecode(game:HttpGet(
                     "https://games.roblox.com/v1/games/6284583030/servers/Public?sortOrder=Asc&limit=100"))
 
@@ -555,7 +553,8 @@ if game.PlaceId == 6284583030 then
         Library.WorldCmds.Load("Spawn")
         wait(5)
 
-        local timeOutLoop = 3
+        local countFarmDiamond = 4
+        local countFarmFruit = 4
         while true do
             if getgenv().isRun then
                 --Fram Fruits
@@ -571,6 +570,7 @@ if game.PlaceId == 6284583030 then
                     if  isMoveAxolotl == false then
                         wait(1)
                         HumanoidRootPart.CFrame = spawnAxolotlDeepOcean
+                        countFarmFruit = countFarmFruit -1
                         isMoveAxolotl = true
                     end
 
@@ -602,6 +602,7 @@ if game.PlaceId == 6284583030 then
                         if isMoveDiamod == false then
                             wait(1)
                             HumanoidRootPart.CFrame = spawnDiamondMine
+                            countFarmDiamond = countFarmDiamond - 1
                             isMoveDiamod = true
                         end
 
@@ -614,8 +615,7 @@ if game.PlaceId == 6284583030 then
                     end
                 end
 
-                timeOutLoop = timeOutLoop - 1;
-                if timeOutLoop == 0 then
+                if countFarmDiamond == 0 or countFarmFruit == 0 then
                     ConnectServerPublic()
                 end
 

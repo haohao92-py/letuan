@@ -6,6 +6,9 @@ if not game:IsLoaded() then game.Loaded:Wait() end
 
 --//-------------- getgenv ----------------//*
 getgenv().isRun = true
+getgenv().isChangeServer = false
+getgenv().countPlayersToChange = 5
+getgenv().delayFarmCoins = 0.05
 --//-------------- SERVICES ----------------//*
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
@@ -48,25 +51,25 @@ if game.PlaceId == 6284583030 then
                 "Error while bypassing the anti-cheat! (Didn't find blunder)")
         end
 
-        -- local OldGet = Blunder.getAndClear
-        -- setreadonly(Blunder, false)
-        -- local function OutputData(Message)
-        --     print("-- PET SIM X BLUNDER --")
-        --     print(Message .. "\n")
-        -- end
+        local OldGet = Blunder.getAndClear
+        setreadonly(Blunder, false)
+        local function OutputData(Message)
+            print("-- PET SIM X BLUNDER --")
+            print(Message .. "\n")
+        end
 
-        -- Blunder.getAndClear = function(...)
-        --     local Packet = ...
-        --     for i, v in next, Packet.list do
-        --         if v.message ~= "PING" then
-        --             OutputData(v.message)
-        --             table.remove(Packet.list, i)
-        --         end
-        --     end
-        --     return OldGet(Packet)
-        -- end
+        Blunder.getAndClear = function(...)
+            local Packet = ...
+            for i, v in next, Packet.list do
+                if v.message ~= "PING" then
+                    OutputData(v.message)
+                    table.remove(Packet.list, i)
+                end
+            end
+            return OldGet(Packet)
+        end
 
-        --setreadonly(Blunder, true)
+        setreadonly(Blunder, true)
     end)
 
     if not banSuccess then
@@ -98,7 +101,7 @@ if game.PlaceId == 6284583030 then
 
         local originalPlay = Library.Audio.Play
         Library.Audio.Play = function(...)
-            if checkcaller() then
+            if true then
                 local audioId, parent, pitch, volume, maxDistance, group, looped, timePosition = unpack({ ... })
                 if type(audioId) == "table" then
                     audioId = audioId[Random.new():NextInteger(1, #audioId)]
@@ -181,12 +184,12 @@ if game.PlaceId == 6284583030 then
     -- local orbsScript = getsenv(game.Players.LocalPlayer.PlayerScripts.Scripts.Game:WaitForChild("Orbs", 10))
     -- local CollectOrb = orbsScript.Collect
 
-    local GetRemoteFunction = debug.getupvalue(Library.Network.Invoke, 2)
-    -- OrbList = debug.getupvalue(orbsScript.Collect, 1)
-    local CoinsTable = debug.getupvalue(
-        getsenv(LocalPlayer.PlayerScripts.Scripts.Game:WaitForChild("Coins", 10)).DestroyAllCoins, 1)
-    local RenderedPets = debug.getupvalue(
-        getsenv(LocalPlayer.PlayerScripts.Scripts.Game:WaitForChild("Pets", 10)).NetworkUpdate, 1)
+    -- local GetRemoteFunction = debug.getupvalue(Library.Network.Invoke, 2)
+    -- -- OrbList = debug.getupvalue(orbsScript.Collect, 1)
+    -- local CoinsTable = debug.getupvalue(
+    --     getsenv(LocalPlayer.PlayerScripts.Scripts.Game:WaitForChild("Coins", 10)).DestroyAllCoins, 1)
+    -- local RenderedPets = debug.getupvalue(
+    --     getsenv(LocalPlayer.PlayerScripts.Scripts.Game:WaitForChild("Pets", 10)).NetworkUpdate, 1)
 
     local farmMaxDistance = 300
 
@@ -195,7 +198,7 @@ if game.PlaceId == 6284583030 then
         local sortedCoins = {}
 
 
-        CoinsTable = debug.getupvalue(getsenv(LocalPlayer.PlayerScripts.Scripts.Game.Coins).DestroyAllCoins, 1)
+        local CoinsTable = debug.getupvalue(getsenv(LocalPlayer.PlayerScripts.Scripts.Game.Coins).DestroyAllCoins, 1)
 
         for _, coin in pairs(coins) do
             local coinMesh = coin:FindFirstChild("Coin")
@@ -334,13 +337,14 @@ if game.PlaceId == 6284583030 then
 
     _G.ChangingServer = false
     function ConnectServerPublic()
+        if getgenv().isChangeServer == false then return end
         if _G.ChangingServer == false then
             _G.ChangingServer = true
             task.spawn(function()
-                for i = 30, 0, -1 do
-                    print("Cooldown change server:", i)
-                    wait(1)
-                end
+                -- for i = 600, 0, -1 do
+                --     print("Cooldown change server:", i)
+                --     wait(1)
+                -- end
                 local Servers = game.HttpService:JSONDecode(game:HttpGet(
                     "https://games.roblox.com/v1/games/6284583030/servers/Public?sortOrder=Asc&limit=100"))
 
@@ -368,7 +372,7 @@ if game.PlaceId == 6284583030 then
     --end)
 
     function CheckCountPlayersInServer()
-        if #game.Players:GetChildren() >= 13 then
+        if #game.Players:GetChildren() >= getgenv().countPlayersToChange then
             ConnectServerPublic()
         end
     end
@@ -391,7 +395,8 @@ if game.PlaceId == 6284583030 then
     task.spawn(function()
         pcall(function()
             while true do
-                for _, lootbag in pairs(Library.Things:FindFirstChild("Lootbags"):GetChildren()) do
+                local lootbags = Library.Things:FindFirstChild("Lootbags"):GetChildren()
+                for _, lootbag in pairs(lootbags) do
                     if lootbag and not lootbag:GetAttribute("Collected") then
                         Library.Network.Fire("Collect Lootbag", lootbag.Name,
                             HumanoidRootPart.Position +
@@ -399,6 +404,7 @@ if game.PlaceId == 6284583030 then
                         wait(0.03)
                     end
                 end
+                table.clear(lootbags)
                 wait(0.1)
             end
         end)
@@ -419,6 +425,8 @@ if game.PlaceId == 6284583030 then
                 if OrbsToCollect and #OrbsToCollect > 0 then
                     Library.Network.Fire("Claim Orbs", OrbsToCollect)
                 end
+
+                table.clear(OrbsToCollect)
             end)
             wait(0.1)
         end
@@ -429,13 +437,13 @@ if game.PlaceId == 6284583030 then
     task.spawn(function()
         while true do
             if _G.IsLoop then
-                local foundCoins = SortCoinsByPriorityFastMode(CoinsTable)
-                RenderedPets = debug.getupvalue(getsenv(LocalPlayer.PlayerScripts.Scripts.Game.Pets).NetworkUpdate, 1)
-                CoinsTable = debug.getupvalue(getsenv(LocalPlayer.PlayerScripts.Scripts.Game.Coins).DestroyAllCoins, 1)
+                local RenderedPets = debug.getupvalue(getsenv(LocalPlayer.PlayerScripts.Scripts.Game.Pets).NetworkUpdate, 1)
+                local CoinsTable = debug.getupvalue(getsenv(LocalPlayer.PlayerScripts.Scripts.Game.Coins).DestroyAllCoins, 1)
 
                 --print("Coin tim thay", #foundCoins)
 
                 if _G.SendAllPet then
+                    local foundCoins = SortCoinsByPriorityFastMode(CoinsTable)
                     --Nếu coin > 0 thì thực thi đoạn ở dưới
                     if foundCoins and #foundCoins > 0 then
                         --Lấy thông tin pet đang trang bị
@@ -456,16 +464,14 @@ if game.PlaceId == 6284583030 then
                                 end
 
                                 table.remove(foundCoins, 1)
-                                task.wait(0.1)
+                                task.wait(getgenv().delayFarmCoins)
                             end
                         end
                     end
                 else
-                    local equippedPets = Library.PetCmds.GetEquipped()
                     local foundCoins = {}
-                    local worldCoins = WorldCoins:GetChildren()
                     --print("WorldCoins", #worldCoins)
-                    local sortCoinsByPriority = SortCoinsByPriority(worldCoins)
+                    local sortCoinsByPriority = SortCoinsByPriority(WorldCoins:GetChildren())
                     --print("SortWorldCoins", #sortCoinsByPriority)
 
                     for _, ch in ipairs(sortCoinsByPriority) do
@@ -474,7 +480,7 @@ if game.PlaceId == 6284583030 then
                         local coinMesh = ch:FindFirstChild("Coin")
                         local mag = (HumanoidRootPart.Position - coinMesh.Position).magnitude
 
-                        for _, pet in pairs(equippedPets) do
+                        for _, pet in pairs(RenderedPets) do
                             if coin and coin.pets and table.find(coin.pets, pet.uid) then
                                 containsMyPet = true
                                 break
@@ -501,7 +507,7 @@ if game.PlaceId == 6284583030 then
                                 Library.Signal.Fire("Select Coin", coin, pet)
 
                                 table.remove(foundCoins, 1)
-                                task.wait(0.1)
+                                task.wait(0.3)
                             end
                         end
                     end
@@ -549,7 +555,8 @@ if game.PlaceId == 6284583030 then
 
         Library.WorldCmds.Load("Spawn")
         wait(5)
-        
+
+        local timeOutLoop = 4
         while true do
             if getgenv().isRun then
                 --Fram Fruits
@@ -594,7 +601,8 @@ if game.PlaceId == 6284583030 then
                     else
 
                         if isMoveDiamod == false then
-                            HumanoidRootPart = spawnDiamondMine
+                            wait(1)
+                            HumanoidRootPart.CFrame = spawnDiamondMine
                             isMoveDiamod = true
                         end
 
@@ -607,6 +615,11 @@ if game.PlaceId == 6284583030 then
                     end
                 end
                 _G.IsLoop = false;
+                CheckCountPlayersInServer()
+                timeOutLoop = timeOutLoop - 1
+                if timeOutLoop == 0 then
+                    ConnectServerPublic()
+                end
             end
             wait(0.1)
             _G.IsLoop = false

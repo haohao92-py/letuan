@@ -555,7 +555,7 @@ if game.PlaceId == 6284583030 then
         Library.WorldCmds.Load("Spawn")
         wait(5)
 
-        local timeOutLoop = 4
+        local timeOutLoop = 3
         while true do
             if getgenv().isRun then
                 --Fram Fruits

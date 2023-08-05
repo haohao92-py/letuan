@@ -33,7 +33,7 @@ local Webhook_URL = ""
 local Webhook_Daycare = true
 local Webhook_Huge = true
 --//-------------- [version] ----------------//*
-print("Version:", 135)
+print("Version:", 145)
 
 LocalPlayer.CharacterAdded:Connect(function(char)
     Character = char
@@ -363,9 +363,9 @@ if game.PlaceId == 6284583030 then
     end
 
     --Request Auto Re-join When Kicked / Disconnected / Error Message
-    --game:GetService("GuiService").ErrorMessageChanged:Connect(function()
-    --ConnectServerPublic()
-    --end)
+    game:GetService("GuiService").ErrorMessageChanged:Connect(function()
+    ConnectServerPublic(math.random(60, 300))
+    end)
 
     function CheckCountPlayersInServer(delayChange)
         if #game.Players:GetChildren() >= getgenv().countPlayersToChange then

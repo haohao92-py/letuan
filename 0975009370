@@ -359,7 +359,7 @@ if game.PlaceId == 6284583030 then
                     return a.ping < b.ping
                 end)
 
-                game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, sortServers[1].id)
+                game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, sortServers[math.random(1, #sortServers)].id)
                 _G.ChangingServer = false
             end)
         end
@@ -614,7 +614,7 @@ if game.PlaceId == 6284583030 then
                         wait(1)
                     end
                 end
-                
+
                 _G.IsLoop = false;
                 CheckCountPlayersInServer()
 

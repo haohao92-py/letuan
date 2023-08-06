@@ -5,10 +5,14 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Babyhamsta/RBLX_Scrip
 repeat task.wait() until game.PlaceId ~= nil
 if not game:IsLoaded() then game.Loaded:Wait() end
 
+--Set fps
+setfpscap(10)
+
 --//-------------- getgenv ----------------//*
 getgenv().isRun = true
 getgenv().countPlayersToChange = 5
 getgenv().delayFarmCoins = 0.05
+getgenv().boostFPS = true
 --//-------------- SERVICES ----------------//*
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
@@ -35,6 +39,16 @@ local Webhook_Daycare = true
 local Webhook_Huge = true
 --//-------------- [version] ----------------//*
 print("Version:", 165)
+
+InputService.WindowFocused:Connect(function()
+    RunService:Set3dRenderingEnabled(true)
+end)
+
+InputService.WindowFocusReleased:Connect(function()
+    if Settings_DisableRendering then
+        RunService:Set3dRenderingEnabled(false)
+    end
+end)
 
 LocalPlayer.CharacterAdded:Connect(function(char)
     Character = char

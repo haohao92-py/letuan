@@ -3,12 +3,36 @@ if not game:IsLoaded() then game.Loaded:Wait() end
 
 -- Important Variables
 local SCRIPT_NAME = "Gom Gem"
-local SCRIPT_VERSION = "v0.4" -- Hey rafa remember to change it before updating lmao
 
+--//-------------- SERVICES ----------------//*
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-local Character = Players.LocalPlayer.Character
-local HumanoidRootPart = Character.HumanoidRootPart
+local HttpService = game:GetService("HttpService")
+local InputService = game:GetService('UserInputService')
+local RunService = game:GetService('RunService')
+local ContentProvider = game:GetService("ContentProvider")
+
+--//*--------- GLOBAL VARIABLES -----------//*
+local ScriptIsCurrentlyBusy = false
+local Character = nil
+local Humanoid = nil
+local HumanoidRootPart = nil
+local CurrentWorld = ""
+local CurrentPosition = nil
+
+local Settings_DisableRendering = true
+
+local Webhook_Enabled = false
+local Webhook_URL = ""
+local Webhook_Daycare = true
+local Webhook_Huge = true
+
+LocalPlayer.CharacterAdded:Connect(function(char) 
+	Character = char
+	Humanoid = Character:WaitForChild("Humanoid")
+	HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+end)
 
 if game.PlaceId == 6284583030 then
     local banSuccess, banError = pcall(function()
@@ -153,7 +177,6 @@ if game.PlaceId == 6284583030 then
     end
 
     function SendGem()
-        if Library.WorldCmds.Get() ~= "Spawn" then
             Library.WorldCmds.Load("Spawn")
     
             wait(30)
@@ -163,11 +186,10 @@ if game.PlaceId == 6284583030 then
             --HumanoidRootPart.CFrame = HumanoidRootPart.CFrame + (HumanoidRootPart.CFrame.LookVector * 15)
     
             wait(1)
-    
-            print(Library.Network.Invoke("Send Mail", ComposeMail("Easyz002", Library.Save.Diamonds - 100000)))
+            local Diamonds = Library.Save.Get().Diamonds
+            print(Library.Network.Invoke("Send Mail", ComposeMail("Easyz002", Diamonds - 100000)))
     
             wait(3)
-        end
     end
 
     SendGem()

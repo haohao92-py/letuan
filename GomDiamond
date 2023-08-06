@@ -5,8 +5,6 @@ local Character = Players.LocalPlayer.Character
 local HumanoidRootPart = Character.HumanoidRootPart
 local Save = Library.Save.Get()
 
-getgenv().Diamonds = Save.Diamonds
-
 if game.PlaceId == 6284583030 then
 
     local banSuccess, banError = pcall(function()

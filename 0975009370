@@ -40,15 +40,15 @@ local Webhook_Huge = true
 --//-------------- [version] ----------------//*
 print("Version:", 165)
 
-InputService.WindowFocused:Connect(function()
-    RunService:Set3dRenderingEnabled(true)
-end)
+-- InputService.WindowFocused:Connect(function()
+--     RunService:Set3dRenderingEnabled(true)
+-- end)
 
-InputService.WindowFocusReleased:Connect(function()
-    if Settings_DisableRendering then
-        RunService:Set3dRenderingEnabled(false)
-    end
-end)
+-- InputService.WindowFocusReleased:Connect(function()
+--     if Settings_DisableRendering then
+--         RunService:Set3dRenderingEnabled(false)
+--     end
+-- end)
 
 LocalPlayer.CharacterAdded:Connect(function(char)
     Character = char

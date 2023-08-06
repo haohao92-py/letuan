@@ -12,7 +12,7 @@ getgenv().isRun = true
 getgenv().countPlayersToChange = 5
 getgenv().delayFarmCoins = 0.05
 getgenv().boostFPS = true
-getgevn().isChangeServer = true
+getgenv().isChangeServer = true
 --//-------------- SERVICES ----------------//*
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")

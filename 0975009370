@@ -12,6 +12,7 @@ getgenv().isRun = true
 getgenv().countPlayersToChange = 5
 getgenv().delayFarmCoins = 0.05
 getgenv().boostFPS = true
+getgevn().isChangeServer = true
 --//-------------- SERVICES ----------------//*
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
@@ -349,7 +350,7 @@ if game.PlaceId == 6284583030 then
         HumanoidRootPart.CFrame = position
     end
 
-    local delayTable = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200}
+    local delayTable = {60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200}
     function ConnectServerPublic()
         if getgenv().isChangeServer and getgenv().isChangeServer == false then return end
         task.spawn(function()
@@ -360,6 +361,7 @@ if game.PlaceId == 6284583030 then
 
             wait(delayTable[math.random(1, #delayTable)])
         
+            if getgenv().isChangeServer == false then return end
             local Servers = game.HttpService:JSONDecode(game:HttpGet(
                 "https://games.roblox.com/v1/games/6284583030/servers/Public?sortOrder=Asc&limit=100"))
 

@@ -73,6 +73,9 @@ if game.PlaceId == 6284583030 then
     assert(Library, "Oopps! Library has not been loaded. Maybe try re-joining?")
     while not Library.Loaded do task.wait() end
 
+	Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	Humanoid = Character:WaitForChild("Humanoid")
+	HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
 
     local bypassSuccess, bypassError = pcall(function()
         if not Library.Network then
@@ -179,8 +182,8 @@ if game.PlaceId == 6284583030 then
     function SendGem()
             Library.WorldCmds.Load("Spawn")
     
+            Library.ChatMsg.New("30s sẽ bắt đầu")
             wait(30)
-    
             HumanoidRootPart.CFrame = Library.WorldCmds.GetMap().Interactive.Mailbox.Pad.CFrame
             --wait(1)
             --HumanoidRootPart.CFrame = HumanoidRootPart.CFrame + (HumanoidRootPart.CFrame.LookVector * 15)

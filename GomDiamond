@@ -1,9 +1,12 @@
+if not game:IsLoaded() then game.Loaded:Wait() end
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Character = Players.LocalPlayer.Character
 local HumanoidRootPart = Character.HumanoidRootPart
 local Save = Library.Save.Get()
+
+getgenv().Diamonds = Save.Diamonds
 
 if game.PlaceId == 6284583030 then
 

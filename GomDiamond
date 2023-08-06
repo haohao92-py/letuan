@@ -1,5 +1,5 @@
 if not game:IsLoaded() then game.Loaded:Wait() end
-
+local Library = require(game:GetService("ReplicatedStorage").Library)
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Character = Players.LocalPlayer.Character
@@ -44,7 +44,7 @@ if game.PlaceId == 6284583030 then
         return
     end
 
-    local Library = require(game:GetService("ReplicatedStorage").Library)
+    Library = require(game:GetService("ReplicatedStorage").Library)
     assert(Library, "Oopps! Library has not been loaded. Maybe try re-joining?")
     while not Library.Loaded do task.wait() end
 

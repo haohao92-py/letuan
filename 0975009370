@@ -33,7 +33,7 @@ local Webhook_URL = ""
 local Webhook_Daycare = true
 local Webhook_Huge = true
 --//-------------- [version] ----------------//*
-print("Version:", 145)
+print("Version:", 155)
 
 LocalPlayer.CharacterAdded:Connect(function(char)
     Character = char
@@ -334,15 +334,13 @@ if game.PlaceId == 6284583030 then
         HumanoidRootPart.CFrame = position
     end
 
-    _G.ChangingServer = false
+    local delayTable = {60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200}
     function ConnectServerPublic()
         if getgenv().isChangeServer and getgenv().isChangeServer == false then return end
         task.spawn(function()
-            if getgenv().indexChangeServer then
-                wait(getgenv().indexChangeServer * 60)
-            else
-                wait(60)
-            end
+
+            wait(delayTable[math.random(1, #delayTable)])
+        
             local Servers = game.HttpService:JSONDecode(game:HttpGet(
                 "https://games.roblox.com/v1/games/6284583030/servers/Public?sortOrder=Asc&limit=100"))
 
@@ -360,7 +358,6 @@ if game.PlaceId == 6284583030 then
 
             game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId,
                 sortServers[math.random(1, #sortServers)].id)
-            _G.ChangingServer = false
         end)
     end
 
@@ -438,7 +435,7 @@ if game.PlaceId == 6284583030 then
                 local RenderedPets = debug.getupvalue(getsenv(LocalPlayer.PlayerScripts.Scripts.Game.Pets).NetworkUpdate,
                     1)
                 local CoinsTable = debug.getupvalue(
-                getsenv(LocalPlayer.PlayerScripts.Scripts.Game.Coins).DestroyAllCoins, 1)
+                    getsenv(LocalPlayer.PlayerScripts.Scripts.Game.Coins).DestroyAllCoins, 1)
 
                 --print("Coin tim thay", #foundCoins)
 
@@ -540,6 +537,8 @@ if game.PlaceId == 6284583030 then
     warn("Auto Redeem & Activate Boosts")
 
     task.spawn(function()
+        CheckCountPlayersInServer()
+
         local spawnAxolotlDeepOcean = CFrame.new(4143.873046875, 9.539969444274902, 3792.5546875)
         local cameraAxolotl = CFrame.new(
             4190.65625, 90.2267075, 3831.80762,
@@ -618,7 +617,7 @@ if game.PlaceId == 6284583030 then
                 end
 
                 if isFarmDiamonds == 0 and isFarmFruits == 0 then
-                    CheckCountPlayersInServer()
+                    ConnectServerPublic()
                 end
             end
             wait(0.1)

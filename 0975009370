@@ -352,7 +352,7 @@ if game.PlaceId == 6284583030 then
     function ConnectServerPublic()
         if getgenv().isChangeServer and getgenv().isChangeServer == false then return end
         task.spawn(function()
-            if #game.Players:GetChildren() == 1 then
+            if #game.Players:GetChildren() <= 2 then
                 return
             end
 

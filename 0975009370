@@ -382,7 +382,8 @@ if game.PlaceId == 6284583030 then
 
     --Request Auto Re-join When Kicked / Disconnected / Error Message
     game:GetService("GuiService").ErrorMessageChanged:Connect(function()
-        ConnectServerPublic()
+        game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, game.JobId, 
+        game.Players.LocalPlayer)
     end)
 
     function CheckCountPlayersInServer()
@@ -632,10 +633,6 @@ if game.PlaceId == 6284583030 then
                         --print("DIAMONDS Cooldown:", timeOutFarmDiamondMine)
                         wait(1)
                     end
-                end
-
-                if isFarmDiamonds == true and isFarmFruits == true then
-                    ConnectServerPublic()
                 end
             end
             wait(0.1)

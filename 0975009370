@@ -608,7 +608,7 @@ if game.PlaceId == 6284583030 then
                 --Farm Diamonds
                 local timeOutFarmDiamondMine = 600
                 local isMoveDiamod = false
-                while true and getgenv().isRun do
+                while timeOutFarmDiamondMine and getgenv().isRun do
                     --CheckCountPlayersInServer()
 
                     if Library.WorldCmds.Get() ~= "Diamond Mine" then

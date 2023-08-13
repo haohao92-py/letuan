@@ -579,7 +579,7 @@ if game.PlaceId == 6284583030 then
         while true do
             if getgenv().isRun then
                 --Fram Fruits
-                local timeOutFarmFruits = 100
+                local timeOutFarmFruits = 180
                 local isMoveAxolotl = false
                 while timeOutFarmFruits > 0 and getgenv().isRun do
                     --CheckCountPlayersInServer()
